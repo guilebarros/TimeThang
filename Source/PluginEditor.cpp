@@ -5,8 +5,19 @@
 TimeThangAudioProcessorEditor::TimeThangAudioProcessorEditor (TimeThangAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
+    
 
-    setSize (400, 300);
+    setSize (MAIN_PANEL_WIDTH, MAIN_PANEL_HEIGHT);
+    
+    mMainPanel = std::make_unique<TTMainPanel>(&audioProcessor);
+    
+    mMainPanel->setBounds(0,0,MAIN_PANEL_WIDTH,MAIN_PANEL_HEIGHT);
+    
+    mMainPanel->setName("example");
+    
+    addAndMakeVisible(mMainPanel.get());
+    
+    
 }
 
 TimeThangAudioProcessorEditor::~TimeThangAudioProcessorEditor()
