@@ -90,6 +90,7 @@ void TimeThangAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     for(int i = 0; i < 2; i++)
     {
         mDelay[i]->setSampleRate(sampleRate);
+        mLfo[i]->setSampleRate(sampleRate);
     }
     
 }
@@ -99,6 +100,7 @@ void TimeThangAudioProcessor::releaseResources()
     for(int i = 0; i < 2; i++)
     {
         mDelay[i]->reset();
+        mLfo[i]->reset();
     }
 
 }
@@ -154,11 +156,14 @@ void TimeThangAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
                                 channelData,
                                 buffer.getNumSamples());
         
+        mLfo[channel]->process(0.25, 0.5, buffer.getNumSamples());
+        
         // delay with static values
         mDelay[channel]->process(channelData,
                                  0.25,
                                  0.5,
                                  0.35,
+                                 mLfo[channel]->getBuffer(),
                                  channelData,
                                  buffer.getNumSamples());
     }
@@ -195,6 +200,7 @@ void TimeThangAudioProcessor::initializeDSP()
     {
         mGain[i] = std::make_unique<TTGain>();
         mDelay[i] = std::make_unique<TTDelay>();
+        mLfo[i] = std::make_unique<TTLfo>();
     }
 }
 

@@ -24,7 +24,7 @@ void TTDelay::setSampleRate(double inSampleRate)
 void TTDelay::reset()
 {
     
-    juce::zeromem(mBuffer, (sizeof(double) * maxBufferDelaySize));
+    juce::zeromem(mBuffer, (sizeof(double) * maxBufferSize));
     
 }
 
@@ -32,6 +32,7 @@ void TTDelay::process(float* inAudio,
                       float inTime,
                       float inFeedback,
                       float inWetDry,
+                      float* inModulationBuffer,
                       float* outAudio,
                       int inNumSamplesToRender)
 {
@@ -44,7 +45,11 @@ void TTDelay::process(float* inAudio,
     
     for(int i = 0; i < inNumSamplesToRender; i++)
     {
-        const double delayTimeInSamples = (inTime * mSampleRate);
+        
+        const double delayTimeModulation = (0.003 + (0.002 * inModulationBuffer[i]));
+        
+        const double delayTimeInSamples = ((inTime * delayTimeModulation) * mSampleRate);
+        
         const double sample = getInterpolatedSample(delayTimeInSamples);
         
         mBuffer[mDelayIndex] = inAudio[i] + (mFeedbackSample * feedbackMapped);
@@ -55,9 +60,9 @@ void TTDelay::process(float* inAudio,
         
         mDelayIndex = mDelayIndex + 1;
         
-        if(mDelayIndex >= maxBufferDelaySize)
+        if(mDelayIndex >= maxBufferSize)
         {
-            mDelayIndex = mDelayIndex - maxBufferDelaySize;
+            mDelayIndex = mDelayIndex - maxBufferSize;
         }
     }
 }
@@ -68,7 +73,7 @@ double TTDelay::getInterpolatedSample(float inDelayTimeInSamples)
     
     if(readPosition < 0.0f)
     {
-        readPosition += maxBufferDelaySize;
+        readPosition += maxBufferSize;
     }
     
     int index_y0 = (int)readPosition - 1;
@@ -77,16 +82,16 @@ double TTDelay::getInterpolatedSample(float inDelayTimeInSamples)
     
     if(index_y0 <= 0)
     {
-        index_y0 += maxBufferDelaySize;
+        index_y0 += maxBufferSize;
     }
     
     int index_y1 = readPosition;
     
     // se for maior do que o maior tamanho de buffer, volta ao inicio
     
-    if(index_y1 > maxBufferDelaySize)
+    if(index_y1 > maxBufferSize)
     {
-        index_y1 = index_y1 - maxBufferDelaySize;
+        index_y1 = index_y1 - maxBufferSize;
     }
     
     const float sample_y0 = mBuffer[index_y0];

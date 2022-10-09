@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "TTGain.h"
 #include "TTDelay.h"
+#include "TTLfo.h"
 
 class TimeThangAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
@@ -53,6 +54,7 @@ private:
     
     std::unique_ptr<TTGain> mGain [2];
     std::unique_ptr<TTDelay> mDelay [2];
+    std::unique_ptr<TTLfo> mLfo [2];
     
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeThangAudioProcessor)

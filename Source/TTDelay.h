@@ -1,6 +1,6 @@
 #pragma once
+#include "TTHelper.h"
 
-const int maxBufferDelaySize = 192000;
 
 class TTDelay
 {
@@ -18,6 +18,7 @@ public:
                  float inTime,
                  float inFeedback,
                  float inWetDry,
+                 float* inModulationBuffer,
                  float* outAudio,
                  int inNumSamplesToRender);
     
@@ -29,7 +30,7 @@ private:
 
     
     double mSampleRate;
-    double mBuffer[maxBufferDelaySize];
+    double mBuffer[maxBufferSize];
     double mFeedbackSample;
     
     int mDelayIndex;
