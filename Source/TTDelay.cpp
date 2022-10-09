@@ -5,7 +5,9 @@
 TTDelay::TTDelay()
 : mSampleRate(-1),
   mFeedbackSample(0.0),
+  mTimeSmoothed(0),
   mDelayIndex(0)
+  
 {
     
 }
@@ -24,6 +26,7 @@ void TTDelay::setSampleRate(double inSampleRate)
 void TTDelay::reset()
 {
     
+    mTimeSmoothed = 0.0f;
     juce::zeromem(mBuffer, (sizeof(double) * maxBufferSize));
     
 }
@@ -41,14 +44,21 @@ void TTDelay::process(float* inAudio,
     // o mapeamento para 0.95 é para evitar um feedback infinito
     const float feedbackMapped = juce::jmap(inFeedback, 0.0f, 1.0f, 0.0f, 0.95f);
     
+    
     // loop para iterar nos samples
     
     for(int i = 0; i < inNumSamplesToRender; i++)
     {
         
-        const double delayTimeModulation = (0.003 + (0.002 * inModulationBuffer[i]));
+        // sample level smoothing
         
-        const double delayTimeInSamples = ((inTime * delayTimeModulation) * mSampleRate);
+        const double delayTimeModulation = (inTime + (0.002 * inModulationBuffer[i]));
+        
+        mTimeSmoothed = mTimeSmoothed - TTParameterSmoothingCoeff_Fine * (mTimeSmoothed -  delayTimeModulation);
+        
+        const double delayTimeInSamples = (mTimeSmoothed * mSampleRate);
+        
+        
         
         const double sample = getInterpolatedSample(delayTimeInSamples);
         

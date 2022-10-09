@@ -156,7 +156,9 @@ void TimeThangAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
                                 channelData,
                                 buffer.getNumSamples());
         
-        mLfo[channel]->process(0.25, 0.5, buffer.getNumSamples());
+        float rate = (channel == 0) ? 0 : 0.25f; // aplicando o rate apenas no canal esquerdo (0)
+        
+        mLfo[channel]->process(rate, 0.5, buffer.getNumSamples());
         
         // delay with static values
         mDelay[channel]->process(channelData,
