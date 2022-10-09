@@ -1,11 +1,3 @@
-/*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
@@ -22,6 +14,7 @@ TimeThangAudioProcessor::TimeThangAudioProcessor()
                        )
 #endif
 {
+    initializeDSP();
 }
 
 TimeThangAudioProcessor::~TimeThangAudioProcessor()
@@ -93,14 +86,21 @@ void TimeThangAudioProcessor::changeProgramName (int index, const juce::String& 
 //==============================================================================
 void TimeThangAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    
+    for(int i = 0; i < 2; i++)
+    {
+        mDelay[i]->setSampleRate(sampleRate);
+    }
+    
 }
 
 void TimeThangAudioProcessor::releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
+    for(int i = 0; i < 2; i++)
+    {
+        mDelay[i]->reset();
+    }
+
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -135,12 +135,7 @@ void TimeThangAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
+  
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
@@ -158,6 +153,14 @@ void TimeThangAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
                                 0.5,
                                 channelData,
                                 buffer.getNumSamples());
+        
+        // delay with static values
+        mDelay[channel]->process(channelData,
+                                 0.25,
+                                 0.5,
+                                 0.35,
+                                 channelData,
+                                 buffer.getNumSamples());
     }
 }
 
@@ -191,6 +194,7 @@ void TimeThangAudioProcessor::initializeDSP()
     for(int i = 0; i < 2; i++)
     {
         mGain[i] = std::make_unique<TTGain>();
+        mDelay[i] = std::make_unique<TTDelay>();
     }
 }
 
