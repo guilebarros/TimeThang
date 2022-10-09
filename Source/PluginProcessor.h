@@ -47,10 +47,15 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    juce::AudioProcessorValueTreeState parameters;
 
 private:
-    // internal function
+    /** internal function */
     void initializeDSP();
+    
+    /** internal function */
+    void initializeParameters();
     
     std::unique_ptr<TTGain> mGain [2];
     std::unique_ptr<TTDelay> mDelay [2];

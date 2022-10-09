@@ -27,6 +27,7 @@
       <FILE id="SwHTCq" name="TTHelper.h" compile="0" resource="0" file="Source/TTHelper.h"/>
       <FILE id="QGY0Xg" name="TTInterfaceDefines.h" compile="0" resource="0"
             file="Source/TTInterfaceDefines.h"/>
+      <FILE id="uBZrNc" name="TTParameters.h" compile="0" resource="0" file="Source/TTParameters.h"/>
     </GROUP>
     <GROUP id="{14785E67-C3F6-BFBB-FF31-AD88153F5F84}" name="DSP">
       <FILE id="rpOgM2" name="TTDelay.cpp" compile="1" resource="0" file="Source/TTDelay.cpp"/>

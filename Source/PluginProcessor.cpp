@@ -1,5 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "TTParameters.h"
 
 //==============================================================================
 TimeThangAudioProcessor::TimeThangAudioProcessor()
@@ -11,9 +12,11 @@ TimeThangAudioProcessor::TimeThangAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+       parameters(*this, nullptr)
 #endif
 {
+    initializeParameters();
     initializeDSP();
 }
 
@@ -152,19 +155,21 @@ void TimeThangAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         auto* channelData = buffer.getWritePointer (channel);
 
         mGain[channel]->process(channelData,
-                                0.5,
+                                getParameter(tParameter_InputGain),
                                 channelData,
                                 buffer.getNumSamples());
         
-        float rate = (channel == 0) ? 0 : 0.25f; // aplicando o rate apenas no canal esquerdo (0)
+        float rate = (channel == 0) ? 0 : getParameter(tParameter_ModulationRate); // aplicando o rate apenas no canal esquerdo (0)
         
-        mLfo[channel]->process(rate, 0.5, buffer.getNumSamples());
+        mLfo[channel]->process(rate,
+                               getParameter(tParameter_ModulationDepth),
+                               buffer.getNumSamples());
         
         // delay with static values
         mDelay[channel]->process(channelData,
-                                 0.25,
-                                 0.5,
-                                 0.35,
+                                 getParameter(tParameter_DelayTime),
+                                 getParameter(tParameter_DelayFeedback),
+                                 getParameter(tParameter_DelayWetDry),
                                  mLfo[channel]->getBuffer(),
                                  channelData,
                                  buffer.getNumSamples());
@@ -206,6 +211,19 @@ void TimeThangAudioProcessor::initializeDSP()
     }
 }
 
+void TimeThangAudioProcessor::initializeParameters()
+{
+    for(int i = 0; i < tParameter_TotalNumParameters; i++)
+    {
+       parameters.createAndAddParameter(TTParameterID[i],
+                                        TTParameterID[i],
+                                        TTParameterID[i],
+                                        juce::NormalisableRange<float>(0.0f, 1.0f),
+                                        0.5f,
+                                        nullptr,
+                                        nullptr);
+    }
+}
 
 //==============================================================================
 // This creates new instances of the plugin..
