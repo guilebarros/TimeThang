@@ -4,6 +4,16 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" companyWebsite="instagram/guilebarros"
               companyName="Guilherme Barros">
   <MAINGROUP id="EyVODg" name="TimeThang">
+    <GROUP id="{B7E075E5-373C-3A83-F36E-12BB6D3827B0}" name="Parameter Control">
+      <FILE id="CsE7t1" name="TTParameterCombobox.cpp" compile="1" resource="0"
+            file="Source/TTParameterCombobox.cpp"/>
+      <FILE id="KBMCtD" name="TTParameterCombobox.h" compile="0" resource="0"
+            file="Source/TTParameterCombobox.h"/>
+      <FILE id="tCm5ic" name="TTParameterSlider.cpp" compile="1" resource="0"
+            file="Source/TTParameterSlider.cpp"/>
+      <FILE id="yAkqV4" name="TTParameterSlider.h" compile="0" resource="0"
+            file="Source/TTParameterSlider.h"/>
+    </GROUP>
     <GROUP id="{E2A16E0B-59DB-194C-4561-647541800620}" name="Panels">
       <FILE id="o3VRlX" name="TTPanelBase.cpp" compile="1" resource="0" file="Source/TTPanelBase.cpp"/>
       <FILE id="Cgwm41" name="TTPanelBase.h" compile="0" resource="0" file="Source/TTPanelBase.h"/>
