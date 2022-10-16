@@ -1,5 +1,6 @@
 #pragma once
 #include "TTPanelBase.h"
+#include "TTParameterSlider.h"
 
 enum TTFxPanelStyle
 {
@@ -24,4 +25,5 @@ public:
 private:
     
     TTFxPanelStyle mStyle;
+    juce::OwnedArray<TTParameterSlider> mSliders;
 };

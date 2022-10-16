@@ -1,4 +1,5 @@
 #include "TTMainPanel.h"
+#include "TTParameters.h"
 
 
 TTMainPanel::TTMainPanel(TimeThangAudioProcessor* inProcessor)
@@ -16,10 +17,12 @@ TTMainPanel::TTMainPanel(TimeThangAudioProcessor* inProcessor)
     
     mInputGainPanel = std::make_unique<TTGainPanel>(inProcessor);
     mInputGainPanel->setTopLeftPosition(0, TOP_PANEL_HEIGHT);
+    mInputGainPanel->setParameterID(tParameter_InputGain);
     addAndMakeVisible(mInputGainPanel.get());
     
     mOutputGainPanel = std::make_unique<TTGainPanel>(inProcessor);
     mOutputGainPanel->setTopLeftPosition(MAIN_PANEL_WIDTH - GAIN_PANEL_WIDTH, TOP_PANEL_HEIGHT);
+    mInputGainPanel->setParameterID(tParameter_OutputGain);
     addAndMakeVisible(mOutputGainPanel.get());
     
     // main panel

@@ -144,17 +144,11 @@ void TimeThangAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
 
-        mGain[channel]->process(channelData,
+        mInputGain[channel]->process(channelData,
                                 getParameter(tParameter_InputGain),
                                 channelData,
                                 buffer.getNumSamples());
@@ -173,6 +167,12 @@ void TimeThangAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
                                  mLfo[channel]->getBuffer(),
                                  channelData,
                                  buffer.getNumSamples());
+        
+        mOutputGain[channel]->process(channelData,
+                                      getParameter(tParameter_OutputGain),
+                                      channelData,
+                                      buffer.getNumSamples());
+        
     }
 }
 
@@ -205,7 +205,8 @@ void TimeThangAudioProcessor::initializeDSP()
 {
     for(int i = 0; i < 2; i++)
     {
-        mGain[i] = std::make_unique<TTGain>();
+        mInputGain[i] = std::make_unique<TTGain>();
+        mOutputGain[i] = std::make_unique<TTGain>();
         mDelay[i] = std::make_unique<TTDelay>();
         mLfo[i] = std::make_unique<TTLfo>();
     }

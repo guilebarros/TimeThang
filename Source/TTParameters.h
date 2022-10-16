@@ -21,6 +21,7 @@ static juce::String TTParameterID[tParameter_TotalNumParameters] =
     "Feedback",
     "Wet Dry",
     "Type",
+    "Output Gain",
     "Modulation Rate",
     "Modulation Depth",
 };

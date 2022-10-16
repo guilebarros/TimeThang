@@ -57,7 +57,8 @@ private:
     /** internal function */
     void initializeParameters();
     
-    std::unique_ptr<TTGain> mGain [2];
+    std::unique_ptr<TTGain> mInputGain [2];
+    std::unique_ptr<TTGain> mOutputGain [2];
     std::unique_ptr<TTDelay> mDelay [2];
     std::unique_ptr<TTLfo> mLfo [2];
     
